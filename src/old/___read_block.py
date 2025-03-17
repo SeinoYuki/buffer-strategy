@@ -116,6 +116,9 @@ int probe_block_io(struct pt_regs *ctx) {
     // 第二引数からブロック番号を取得
     u32 block_no = (u32)PT_REGS_PARM5(ctx);
 
+    if (block_no == 0)
+        return 0;  // ブロック番号が 0 の場合はスキップ
+
     // 既にこの relfilenode の情報が記録されているかチェック
     int found = 0;
     #pragma unroll

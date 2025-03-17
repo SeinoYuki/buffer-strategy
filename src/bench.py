@@ -38,7 +38,7 @@ def init_pgbench():
     logout(result)
 
 def run_pgbench():
-    result = subprocess.run([pgbench_command, "-U", user, "-d", database, "-T", "90000", "-c", "100", "-P", "60", "--progress-timestamp"], capture_output=True, text=True)
+    result = subprocess.run([pgbench_command, "-U", user, "-d", database, "-T", "90000", "-c", "100", "-P", "60", "-R", "1000","--progress-timestamp"], capture_output=True, text=True)
     logout(result)
 
 def init_custom_sql_per15min():
@@ -149,15 +149,18 @@ def init():
 
 def bench():
     pgbench_thread = threading.Thread(target=run_pgbench)
-    custom_sql_per15min_thread = threading.Thread(target=run_custom_sql_per15min)
-    custom_sql_per1hour_thread = threading.Thread(target=run_custom_sql_per1hour)
+    # custom_sql_per15min_thread = threading.Thread(target=run_custom_sql_per15min)
+    # custom_sql_per1hour_thread = threading.Thread(target=run_custom_sql_per1hour)
 
     pgbench_thread.start()
-    custom_sql_per15min_thread.start()
-    custom_sql_per1hour_thread.start()
+    # custom_sql_per15min_thread.start()
+    # custom_sql_per1hour_thread.start()
 
     pgbench_thread.join()
-    custom_sql_per15min_thread.join()
-    custom_sql_per1hour_thread.join()
+    # custom_sql_per15min_thread.join()
+    # custom_sql_per1hour_thread.join()
 
-bench()
+def _bench()
+    result = subprocess.run([psql_command, "-U", user, "-d", database, "-c", "EXPLAIN ANALYZE SELECT * from large_table1"], capture_output=True, text=True)
+    
+    print(result)

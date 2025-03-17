@@ -49,9 +49,15 @@ def main():
         reset_stats(conn)
         start_time = datetime.now()
 
+        file_pg_class = f"../data/pg_class.csv"
+        export_query_to_csv(
+            "SELECT relname, relfilenode FROM pg_class where relnamespace = '2200';",
+            file_pg_class, conn
+        )
+
         while True:
             print("Waiting for 5 minutes...")
-            time.sleep(300)  # 5分待機
+            time.sleep(60)  # 5分待機
 
             # 5分経過後の終了時刻を取得
             end_time = datetime.now()
@@ -64,7 +70,6 @@ def main():
             file_statements = f"../data/pg_stat_statements_{start_str}_{end_str}.csv"
             file_userio_tables = f"../data/pg_statio_user_tables_{start_str}_{end_str}.csv"
             file_userio_indexes = f"../data/pg_statio_user_indexes_{start_str}_{end_str}.csv"
-            file_pg_class = f"../data/pg_class_{start_str}_{end_str}.csv"
 
             # 統計情報のエクスポート
             export_query_to_csv(
@@ -81,10 +86,6 @@ def main():
                 "FROM pg_statio_all_tables "
                 "ORDER BY cache_hit_ratio DESC;",  
                 file_userio_tables, conn
-            )
-            export_query_to_csv(
-                "SELECT relname, relfilenode FROM pg_class;",
-                file_pg_class, conn
             )
 
             # 統計情報をリセットして次の期間へ

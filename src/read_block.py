@@ -122,6 +122,11 @@ int probe_block_io(struct pt_regs *ctx) {
 
     // 第二引数からブロック番号を取得
     u32 block_no = (u32)PT_REGS_PARM5(ctx);
+        
+    if (block_no == 0)
+    return 0;  // ブロック番号が 0 の場合はスキップ
+
+    bpf_trace_printk("relfilenode=%u", relfilenode);
 
     // 既にこの relfilenode の情報が記録されているかチェック
     int found = 0;
@@ -241,7 +246,7 @@ def main():
             csvfile.flush()
 
         # イベントバッファのオープン
-        b["events"].open_perf_buffer(handle_event)
+        b["events"].open_perf_buffer(handle_event, page_cnt=128)
 
         try:
             while True:
